@@ -5,6 +5,7 @@ import { Switch, Route } from 'react-router-dom';
 // In general, each area should be isolated to its own bundle.
 const Home = React.lazy(() => import('../areas/home/home'));
 const Examples = React.lazy(() => import('../areas/examples/examples'));
+const IotDevices = React.lazy(() => import('../areas/iotDevices/iotDevices'));
 
 /**
  * Declares all the route paths in this app so we can deep link anywhere 
@@ -20,6 +21,9 @@ export const Paths = {
         list: '/examples/list',
         inputs: '/examples/inputs',
     },
+    iotDevices: {
+        index: '/iotDevices',
+    },
 };
 
 /** 
@@ -32,6 +36,7 @@ export function Routes() {
         <Switch>
             <Route exact path={Paths.home.index} component={Home} />
             <Route path={Paths.examples.index} component={Examples} />
+            <Route path={Paths.iotDevices.index} component={IotDevices} />
         </Switch>
     );
 }
