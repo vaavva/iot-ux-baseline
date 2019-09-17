@@ -1,0 +1,87 @@
+ {
+    "deviceId": "MyNodeDevice",
+    "etag": "AAAAAAAAAAg=",
+    "deviceEtag": "NjA0NzY5NDcy",
+    "status": "enabled",
+    "statusUpdateTime": "0001-01-01T00:00:00",
+    "connectionState": "Disconnected",
+    "lastActivityTime": "2019-09-07T00:16:04.0391877",
+    "cloudToDeviceMessageCount": 0,
+    "authenticationType": "sas",
+    "x509Thumbprint": {
+      "primaryThumbprint": null,
+      "secondaryThumbprint": null
+    },
+    "version": 9,
+    "properties": {
+      "desired": {
+        "patchId": "Delete WiFi component",
+        "fanOn": "false",
+        "components": {
+          "system": {
+            "id": "17",
+            "units": "farenheit",
+            "firmwareVersion": "9.75"
+          },
+          "climate": {
+            "minTemperature": "68",
+            "maxTemperature": "92"
+          }
+        },
+        "$metadata": {
+          "$lastUpdated": "2019-09-05T21:26:10.8921746Z",
+          "$lastUpdatedVersion": 8,
+          "patchId": {
+            "$lastUpdated": "2019-09-05T21:26:10.8921746Z",
+            "$lastUpdatedVersion": 8
+          },
+          "fanOn": {
+            "$lastUpdated": "2019-09-05T21:25:50.8445866Z",
+            "$lastUpdatedVersion": 4
+          },
+          "components": {
+            "$lastUpdated": "2019-09-05T21:26:10.8921746Z",
+            "$lastUpdatedVersion": 8,
+            "system": {
+              "$lastUpdated": "2019-09-05T21:25:45.8443775Z",
+              "$lastUpdatedVersion": 3,
+              "id": {
+                "$lastUpdated": "2019-09-05T21:25:45.8443775Z",
+                "$lastUpdatedVersion": 3
+              },
+              "units": {
+                "$lastUpdated": "2019-09-05T21:25:45.8443775Z",
+                "$lastUpdatedVersion": 3
+              },
+              "firmwareVersion": {
+                "$lastUpdated": "2019-09-05T21:25:45.8443775Z",
+                "$lastUpdatedVersion": 3
+              }
+            },
+            "climate": {
+              "$lastUpdated": "2019-09-05T21:25:55.8603906Z",
+              "$lastUpdatedVersion": 5,
+              "minTemperature": {
+                "$lastUpdated": "2019-09-05T21:25:45.8443775Z",
+                "$lastUpdatedVersion": 3
+              },
+              "maxTemperature": {
+                "$lastUpdated": "2019-09-05T21:25:55.8603906Z",
+                "$lastUpdatedVersion": 5
+              }
+            }
+          }
+        },
+        "$version": 8
+      },
+      "reported": {
+        "$metadata": {
+          "$lastUpdated": "2019-09-04T22:04:25.3748382Z"
+        },
+        "$version": 1
+      }
+    },
+    "capabilities": {
+      "iotEdge": false
+    }
+  }

@@ -23,6 +23,7 @@ export const Paths = {
     },
     iotDevices: {
         index: '/iotDevices',
+        mockDevices: '/iotDevices/mockDevices',
     },
 };
 
