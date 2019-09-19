@@ -6,6 +6,7 @@ import { Paths } from '../../shell/routes';
 import { MockDevices } from './mockDevices';
 import { TextField, RadioField } from '@microsoft/azure-iot-ux-fluent-controls/lib/components/Field';
 import { DateField } from '@microsoft/azure-iot-ux-fluent-controls/lib/components/DateTime';
+import { Component } from 'react';
 
 const cx = classnames.bind(require('./iotDevices.module.scss'));
 
@@ -60,123 +61,33 @@ export default function IotDevices() {
      * 
      */
 
-    var Registry = require('azure-iothub').Registry;
-    var connectionString = process.env.IOTHUB_CONNECTION_STRING;
-    const deviceId = 'MyNodeDevice';
-    var registry = Registry.fromConnectionString(connectionString);
+    // var Registry = require('azure-iothub').Registry;
+    // // var connectionString = process.env.IOTHUB_CONNECTION_STRING;
+    // const deviceId = 'MyNodeDevice';
+    // var registry = Registry.fromConnectionString(connectionString);
 
-    console.log(registry)
-    console.log(deviceId)
-    
-    registry.getTwin(deviceId, function(err: { message: any; }, twin: any) {
-        if (err) {
-          console.error(err.message);
-        } else {
-          console.log(JSON.stringify(twin, null, 2));
-        }
-    });
-
-    // registry.list(function (err: any, deviceList: { forEach: (arg0: (device: any) => void) => void; }) {
-    //     console.log(deviceList)
-    //     if (err) {
-    //         console.log("Hit an error: " + err)
-    //     } else {
-    //         deviceList.forEach(function (device) {
-    //         var key = device.authentication ? device.authentication.symmetricKey.primaryKey : '<no primary key>';      
-    //         console.log(device.deviceId + ': ' + key);
-    //         });
-    //     }
-        // Create a new device
-        // var device = {
-        //   deviceId: 'sample-device-' + Date.now()
-        // };
-        // console.log('\n**creating device \'' + device.deviceId + '\'');
-        // registry.create(device, printAndContinue('create', function next() {
-      
-        //   // Get the newly-created device
-        //   console.log('\n**getting device \'' + device.deviceId + '\'');
-        //   registry.get(device.deviceId, printAndContinue('get', function next() {
-      
-        //     // Delete the new device
-        //     console.log('\n**deleting device \'' + device.deviceId + '\'');
-        //     registry.delete(device.deviceId, printAndContinue('delete'));
-        //   }));
-        // }));
-    //   });
-    // registry.getTwin(deviceId, function(err: { message: any; }, twin: { update: (arg0: { tags: { city: string; }; properties: { desired: { telemetryInterval: number; }; }; }, arg1: (err: any, twin: any) => void) => void; }) {
-    //     if (err) {
-    //         console.error("My Error " + err.message);
-    //     } else {
-    //         console.log("SUCCESS!!")
-    //         console.log(JSON.stringify(twin, null, 2));
-            // var twinPatch = {
-            // tags: {
-            //     city: "Redmond"
-            // },
-            // properties: {
-            //     desired: {
-            //     telemetryInterval: 1000
-            //     }
-            // }
-            // };
-
-            // method 1: using the update method directly on the twin
-            // twin.update(twinPatch, function(err, twin) {
-            // if (err) {
-            //     console.error(err.message);
-            // } else {
-            //     console.log(JSON.stringify(twin, null, 2));
-            //     // method 2: using the updateTwin method on the Registry object
-            //     registry.updateTwin(twin.deviceId, { properties: { desired: { telemetryInterval: 2000 }}}, twin.etag, function(err, twin) {
-            //     if (err) {
-            //         console.error(err.message);
-            //     } else {
-            //         console.log(JSON.stringify(twin, null, 2));
-            //     }
-            //     });
-            // }
-            // });
-    //     }
-        
-    // });
-
-    // var iothub = require('azure-iothub')
-    // var connectionString = 'HostName=VA-IoT-Sample-Hub.azure-devices.net;SharedAccessKeyName=service;SharedAccessKey=CNcwMhKHpBpEKwpWOcZ3/bj7V1pQUsANtDVnf541PFE=';
- 
-    // var registry = iothub.Registry.fromConnectionString(connectionString);
     // console.log(registry)
-    // console.log(registry.list())
-    // var regList = registry.list()
-    // console.log(regList)
-
-    // Create a new device
-    // var device = {
-    // deviceId: 'sample-device-' + Date.now()
-    // };
+    // console.log(deviceId)
     
-    // registry.create(device, function(err: { toString: () => string; }, deviceInfo: any, res: { statusCode: string; statusMessage: string; }) {
-    //     if (err) console.log(' error: ' + err.toString());
-    //     if (res) console.log(' status: ' + res.statusCode + ' ' + res.statusMessage);
-    //     if (deviceInfo) console.log(' device info: ' + JSON.stringify(deviceInfo));
+    // registry.getTwin(deviceId, function(err: { message: any; }, twin: any) {
+    //     if (err) {
+    //       console.error(err.message);
+    //     } else {
+    //       console.log(JSON.stringify(twin, null, 2));
+    //     }
     // });
-    
+
+
+
     return (
         <div>
             <Switch>
                 <Route path={Paths.iotDevices.index} exact component={Root} />
                 <Route path={Paths.iotDevices.mockDevices} component={MockDevices} />
             </Switch>
-            {/* <h2>Devices</h2>
-            <GenericManagementList<Row>
-                rows={rows}
-                columns={[
-                    { label: 'Name', mapColumn: mapNameCol },
-                    { label: 'Location', mapColumn: 'location' },
-                ]}
-                isSelected={isSelected}
-                onSelect={onSelect}
-                onSelectAll={onSelectAll}
-            /> */}
+
+            <DeviceGetter />
+            
 
             <TextField 
                 name='textField'
@@ -220,4 +131,139 @@ function Root() {
             <li><Link to={Paths.iotDevices.mockDevices} className='link'>Mock Devices</Link></li>
         </ul>
     );
+}
+
+// const Devices = ({ devices }:{[key:string]:any}) => {
+//     console.log("devices")
+//     console.log(devices)
+//     return (
+//         <div>
+//             {devices.map((device: React.ReactNode) =>
+//                 <li>{device}</li>
+//             )}
+//         </div>
+//     )
+// }
+
+
+function NumberList(props: { numbers: any; }) {
+    const numbers = props.numbers;
+    // const pretty = JSON.parse(JSON.stringify(numbers));
+    // console.log(pretty)
+    var deviceItems: any = [];
+    const listItems = numbers.map((number: React.ReactNode[][]) => 
+        // deviceItems = number[1].map(itm => (
+        //     <li>{itm}</li>
+        //     ))
+        
+        
+        <div>
+            <h3>{number[0]}</h3>
+            <div>
+                <li>Authentication Type: {(number[1] as unknown as DeviceInfo).authenticationType}</li>
+                <li>Capabilities: {JSON.stringify((number[1] as unknown as DeviceInfo).capabilities)}</li>
+                <li>Cloud To Device Message Count: {(number[1] as unknown as DeviceInfo).cloudToDeviceMessageCount}</li>
+                <li>Connection State: {(number[1] as unknown as DeviceInfo).connectionState}</li>
+                <li>Device Etag: {(number[1] as unknown as DeviceInfo).deviceEtag}</li>
+                <li>Device ID: {(number[1] as unknown as DeviceInfo).deviceId}</li>
+                <li>Etag: {(number[1] as unknown as DeviceInfo).etag}</li>
+                <li>Last Activity Time: {(number[1] as unknown as DeviceInfo).lastActivityTime}</li>
+                <li>Properties: {JSON.stringify((number[1] as unknown as DeviceInfo).properties)}</li>
+                <li>Status: {(number[1] as unknown as DeviceInfo).status}</li>
+                <li>Status Update Time: {(number[1] as unknown as DeviceInfo).statusUpdateTime}</li>
+                <li>Tags: {JSON.stringify((number[1] as unknown as DeviceInfo).tags)}</li>
+                <li>Version: {(number[1] as unknown as DeviceInfo).version}</li>
+            </div>
+        </div>
+        
+        
+        // console.log(number[0])
+        
+        // deviceItems = number[1];
+        // console.log(deviceItems);
+        // deviceItems = <li>{number[0]}</li>
+        // deviceItems = number[1].map((itm: React.ReactNode[]) => (
+        //     <li>{itm[0]}</li>
+        // )
+        // <li>{itm}</li>
+    );
+      
+    
+    // console.log("DEvice items")
+    // console.log(deviceItems)
+    return (
+      <ul>{listItems}</ul>
+    );
+  }
+ 
+
+// function Devices(props: any) =  {
+//     const devices = props.devices
+//     console.log("devices")
+//     console.log(devices)
+//     return (
+//         <div>
+//             {devices.map((device: React.ReactNode) =>
+//                 <li>{device}</li>
+//             )}
+//         </div>
+//     )
+// }
+
+type cap = {
+    iotEdge: boolean
+}
+
+type DeviceInfo  = {
+    authenticationType: string
+    capabilities: cap
+    cloudToDeviceMessageCount: number
+    connectionState: string
+    deviceEtag: string
+    deviceId: string
+    etag: string
+    lastActivityTime: any
+    properties: any
+    status: string
+    statusUpdateTime: any
+    tags: any
+    version: number
+}
+
+class DeviceGetter extends Component {
+    state = {
+        devices: []
+    }
+
+    componentDidMount() {
+        console.log("fetching")
+        const dId = "MyNodeDevice"
+        fetch('http://localhost:5000/url/?deviceId=' + dId,
+            // { headers: {'Access-Control-Allow-Origin' : '*'}}
+            )
+            .then(res => res.json())
+            .then((data) => {
+                console.log("data")
+                console.log(data)
+                this.setState({devices: data})
+            })
+            .catch(console.log)
+    }
+
+    render() {
+        const numbers = [1,2,3,4,5];
+        console.log(numbers)
+        console.log(this.state.devices)
+        return (
+            
+            <NumberList numbers={this.state.devices} />
+            // <ul><Devices devices={this.state.devices} /></ul>
+        )
+    }
+
+//     return (
+//         <div>
+//             Devices
+//         </div>
+//     );
 }
