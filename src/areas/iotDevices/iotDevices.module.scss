@@ -2,13 +2,8 @@
 @import '../../styles/mixins';
 @import '../../styles/constants';
 
-div {
-  position: relative;
-  left: 8px;
-}
-
 .container {
-  margin: 0px;
+  margin: 0px $gutter-small;
 }
 
 .header {

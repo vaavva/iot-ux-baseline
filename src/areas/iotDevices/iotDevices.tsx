@@ -15,116 +15,61 @@ export default function IotDevices() {
     const [dateValue, changeDateValue] = React.useState('');
 
     return (
-        <div>
+        <div className={cx('container')}>
+            <h1 className={cx('header')}>
+                IoT Devices
+            </h1>
+            <div>
+                <TextField 
+                    name='textField'
+                    value={textValue}
+                    onChange={changeTextValue}
+                    label='Name'
+                    tooltip='Please Enter Your Name'
+                    required
+                />
+                <DateField
+                    name='dateTimeField'
+                    initialValue={dateValue}
+                    onChange={changeDateValue}
+                    label='Birthdate'
+                />
+                <RadioField
+                    name='radioField'
+                    value={radioValue}
+                    onChange={changeRadioValue}
+                    label='Gender'
+                    options={[
+                        { value: 'male', label: 'Male' },
+                        { value: 'female', label: 'Female' },
+                        { value: 'other', label: 'Other/Prefer Not To Say' },
+                    ]}
+                />
 
-            {/* <DeviceChooser /> */}
-            <Select />
+                <h2>Device Twins</h2>
+                <br/>
 
-            {/* <Switch>
-                <Route path={Paths.iotDevices.index} exact component={Root} />
-                <Route path={Paths.iotDevices.mockDevices} component={MockDevices} />
-            </Switch> */}
+                <DeviceGetter />
+                <br/>
 
-            {/* <DeviceGetter /> */}
-            
+                <Select />
 
-            <TextField 
-                name='textField'
-                value={textValue}
-                onChange={changeTextValue}
-                label='Name'
-                tooltip='Please Enter Your Name'
-                required
-            />
-            <DateField
-                name='dateTimeField'
-                initialValue={dateValue}
-                onChange={changeDateValue}
-                label='Birthdate'
-            />
-            <RadioField
-                name='radioField'
-                value={radioValue}
-                onChange={changeRadioValue}
-                label='Gender'
-                options={[
-                    { value: 'male', label: 'Male' },
-                    { value: 'female', label: 'Female' },
-                    { value: 'other', label: 'Other/Prefer Not To Say' },
-                ]}
-            />
-
+            </div>
         </div>
     )
 }
 
-// function Root() {
-//     return (
-//         <ul>
-//             <li><Link to={Paths.iotDevices.mockDevices} className='link'>Mock Devices</Link></li>
-//         </ul>
-//     );
-// }
-
-function DeviceCheckboxes(props: { deviceNames: any; }) {
-    const deviceNames = props.deviceNames;
-//     const initialState = {
-//         field : [false, false, false],
-//     }
-//     let counter = 0
-//     const checkBoxes = deviceNames.map((deviceName: React.ReactNode) => {
-//         const nameField = 'checkbox_field_' + deviceName;
-//         // initialState.field[counter] = false;
-        
-//         <div>
-//             <ComboField
-//                 name={nameField}
-//                 value={checkValue[counter]}
-//                 label={nameField}
-//                 onChange={changeCheckValue}
-//                 // name={nameField}
-//                 // value={initialState.field[counter]}
-//                 // label={nameField}
-//                 // onChange={(newValue) => setState({field: newValue})}
-
-//             />
-//             {deviceName}
-//         </div>
-//         counter++;
-//     }
-// );
-
-    const [nameValue, changeNameValue] = React.useState();
-
-    
-    return (
-    <div>
-            <div style={{marginBottom: '20px'}}>
-                Current value:  {
-                    typeof(nameValue) === 'string' ? `'${nameValue}'`
-                        : <pre>{JSON.stringify(nameValue, null, 2)}</pre>
-                }
-            </div>
-        <ComboField
-            name='devicesNames'
-            label='Devices'
-            value={nameValue}
-            onChange={changeNameValue}
-            options={deviceNames.push("All Devices")}
-            placeholder='Choose a device to View'
-        />
-    </div>
-    );
-
-}
-
 function Select() {
+    //currently selected item in selector
     const [selectValue, changeSelectValue] = React.useState('');
+    //Values to put in dropdown selector
     const [selectOptions, changeSelectOptions] = React.useState<FormOption[]>([
         // show a placeholder text initially:
         { value: '', label: 'Loading…', disabled: true, hidden: true }
     ]);
+    //twin data for selected device
     const [deviceValue, changeDeviceValue] = React.useState('');
+    //whether or now we should show the twin template
     const [isShown, changeShown] = React.useState(false);
     
 
@@ -136,23 +81,16 @@ function Select() {
             )
             .then(res => res.json())
             .then((data) => {
-                console.log("Device Names")
-                console.log(data)
-                var newSelectOptions = [{value: 'AllDevices', label: "All Devices"}]
+                var newSelectOptions = [{value: 'AllDevices', label: "Select Device", disabled: true}]
                 newSelectOptions = data.map((deviceName: React.ReactNode) => {
-                        return newSelectOptions = newSelectOptions, {value: deviceName, label: deviceName};
+                    // add device names to the dropdown selector   
+                    return newSelectOptions = newSelectOptions, {value: deviceName, label: deviceName};
                         
                 });
-                console.log(newSelectOptions)
-                // newSelectOptions = [{value: 'AllDevices', label: "All Devices"}, {value: 'device2', label: "Device 2"}]
+                // newSelectOptions = {value: "AllDevices", label: "Select Device", disabled: true}, newSelectOptions;
+                // console.log(newSelectOptions)
                 changeSelectOptions(
                     newSelectOptions
-                    // // Replace the placeholder text now that we've finished loading:
-                    // { value: '', label: 'Select an option', hidden: true, disabled: true },
-                    
-                    // // actual options:
-                    // { value: 'option1', label: 'Option 1' },
-                    // { value: 'option2', label: 'Option 2' },
                 );
             })
             .catch(console.log)
@@ -166,21 +104,20 @@ function Select() {
 
 
     function handleClick(event: MouseEvent) {
-        console.log("Clicked!")
-        fetch('http://localhost:5000/deviceTwin/?deviceId=' + selectValue,
-            )
-            .then(res => res.json())
-            .then((data) => {
-                console.log("Device Names")
-                console.log(data)
-                // changeDeviceValue(data)
-                // console.log(deviceValue)
-                // this.setState({deviceNames: data})
-                changeDeviceValue(data);
-                changeShown(true);
-            })
-            .catch(console.log)
-        console.log(isShown)
+        //when button shows 'hide twin'
+        if (isShown) {
+            changeShown(false)
+        //when button shows 'show twin data for...', get twin
+        } else {
+            fetch('http://localhost:5000/deviceTwin/?deviceId=' + selectValue,
+                )
+                .then(res => res.json())
+                .then((data) => {
+                    changeDeviceValue(data);
+                    changeShown(true);
+                })
+                .catch(console.log)
+        }
       }
 
     return (
@@ -189,93 +126,35 @@ function Select() {
                 name='selectField'
                 value={selectValue}
                 onChange={changeSelectValue}
-                label='Select Field'
+                label='Select Device on IoT Hub'
                 options={selectOptions}
             />
-            {/* <Button
-                primary
-                onClick={DisplayTwins}
-                attr={{container: {'data-test-hook': 'button1'}}}
-            >
-                Click to Show Device Twins
-            </Button> */}
-            {/* < TwinButton deviceId={selectValue}/> */}
             <Button onClick={handleClick}>
-                See Device Twin for {selectValue}
+                { isShown ? "Hide Twin" : "See Device Twin for " + (selectValue ? selectValue : "...")}
             </Button>
-            <div >
-                <li>Should I be here? {isShown as boolean}</li>
-                <li>Authentication Type: {(deviceValue as unknown as DeviceInfo).authenticationType}</li>
-                <li>Capabilities: {JSON.stringify((deviceValue as unknown as DeviceInfo).capabilities)}</li>
-                <li>Cloud To Device Message Count: {(deviceValue as unknown as DeviceInfo).cloudToDeviceMessageCount}</li>
-                <li>Connection State: {(deviceValue as unknown as DeviceInfo).connectionState}</li>
-                <li>Device Etag: {(deviceValue as unknown as DeviceInfo).deviceEtag}</li>
-                <li>Device ID: {(deviceValue as unknown as DeviceInfo).deviceId}</li>
-                <li>Etag: {(deviceValue as unknown as DeviceInfo).etag}</li>
-                <li>Last Activity Time: {(deviceValue as unknown as DeviceInfo).lastActivityTime}</li>
-                <li>Properties: {JSON.stringify((deviceValue as unknown as DeviceInfo).properties)}</li>
-                <li>Status: {(deviceValue as unknown as DeviceInfo).status}</li>
-                <li>Status Update Time: {(deviceValue as unknown as DeviceInfo).statusUpdateTime}</li>
-                <li>Tags: {JSON.stringify((deviceValue as unknown as DeviceInfo).tags)}</li>
-                <li>Version: {(deviceValue as unknown as DeviceInfo).version}</li>
-            </div>
-
+            
+            { isShown ?  
+                <div >
+                    <li>Authentication Type: {(deviceValue as unknown as DeviceInfo).authenticationType}</li>
+                    <li>Capabilities: {JSON.stringify((deviceValue as unknown as DeviceInfo).capabilities)}</li>
+                    <li>Cloud To Device Message Count: {(deviceValue as unknown as DeviceInfo).cloudToDeviceMessageCount}</li>
+                    <li>Connection State: {(deviceValue as unknown as DeviceInfo).connectionState}</li>
+                    <li>Device Etag: {(deviceValue as unknown as DeviceInfo).deviceEtag}</li>
+                    <li>Device ID: {(deviceValue as unknown as DeviceInfo).deviceId}</li>
+                    <li>Etag: {(deviceValue as unknown as DeviceInfo).etag}</li>
+                    <li>Last Activity Time: {(deviceValue as unknown as DeviceInfo).lastActivityTime}</li>
+                    <li>Properties: {JSON.stringify((deviceValue as unknown as DeviceInfo).properties)}</li>
+                    <li>Status: {(deviceValue as unknown as DeviceInfo).status}</li>
+                    <li>Status Update Time: {(deviceValue as unknown as DeviceInfo).statusUpdateTime}</li>
+                    <li>Tags: {JSON.stringify((deviceValue as unknown as DeviceInfo).tags)}</li>
+                    <li>Version: {(deviceValue as unknown as DeviceInfo).version}</li>
+                </div>
+            : <div></div>}
         </div>
     );
 }
 
-// class TwinButton extends Component {
-//     constructor(props: Readonly<{}>) {
-//         super(props);
-//         const deviceId = props.deviceId;
-//         this.state = {
-//             isClicked: false,
-//         }
-//     }
-//     handleClick(event: MouseEvent) {
-//         // event.preventDefault();
-//         // alert(event.currentTarget.tagName); // alerts BUTTON
-//         this.setState(state => ({ isClicked: !this.state.isClicked}));
-//         console.log("Clicked!")
-//         // console.log(this.props.deviceId)
-//       }
-      
-//     render() {
-//         return ( 
-//         <Button onClick={this.handleClick}>
-//             See Device Twin for {/* {this.props.deviceId} */}
-//         </Button>
-//         )
-//     }
-// }
-
-
-class DeviceChooser extends Component {
-    state = {
-        deviceNames: []
-    }
-
-    componentDidMount() {
-        console.log("fetching")
-        fetch('http://localhost:5000/deviceList/',
-            )
-            .then(res => res.json())
-            .then((data) => {
-                console.log("Device Names")
-                console.log(data)
-                this.setState({deviceNames: data})
-            })
-            .catch(console.log)
-    }
-
-    render() {
-        return (
-            <DeviceCheckboxes deviceNames={this.state.deviceNames} />
-        )
-    }
-}
-
-
+// format to show all devices and their twins
 function DeviceList(props: { devices: any; }) {
     const devices = props.devices;
     const listItems = devices.map((device: React.ReactNode[][]) =>        
@@ -305,7 +184,7 @@ function DeviceList(props: { devices: any; }) {
     );
   }
 
-
+//format of device twins
 type DeviceInfo  = {
     authenticationType: string
     capabilities: any
@@ -322,28 +201,35 @@ type DeviceInfo  = {
     version: number
 }
 
-class DeviceGetter extends Component {
-    state = {
-        devices: []
-    }
+//gets all device twins and shows button with that option
+function DeviceGetter () {
 
-    componentDidMount() {
-        console.log("fetching")
-        fetch('http://localhost:5000/allDeviceTwins/',
-            )
-            .then(res => res.json())
-            .then((data) => {
-                console.log("data")
-                console.log(data)
-                this.setState({devices: data})
-            })
-            .catch(console.log)
-    }
+    const [twinsValue, changeTwinsValue] = React.useState('');
+    const [isShown, changeShown] = React.useState(false);
 
-    render() {
-        console.log(this.state.devices)
-        return (
-            <DeviceList devices={this.state.devices} />
-        )
-    }
+    function handleClick(event: MouseEvent) {
+        //for when button shows 'hide all device twins'
+        if (isShown) {
+            changeShown(false)
+        //for when button shows 'show all device twins', make request to get them and show them
+        } else {
+            fetch('http://localhost:5000/allDeviceTwins/',
+                )
+                .then(res => res.json())
+                .then((data) => {
+                    changeTwinsValue(data)
+                    changeShown(true);
+                })
+                .catch(console.log)
+        }
+      }
+
+    return (
+        <div>
+            <Button onClick={handleClick}>
+                {isShown ? "Hide All Device Twins" : "Show All Device Twins"}
+            </Button>
+            { isShown ? <DeviceList devices={twinsValue} /> : <div></div>}
+        </div>
+    )
 }

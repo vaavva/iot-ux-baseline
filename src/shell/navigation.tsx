@@ -13,7 +13,7 @@ export function Navigation({ loc }: { loc: TranslationFunction}) {
         <>
             <NavItem to={Paths.home.index} exact title={loc('navigation.home')} icon='icon-home' text={loc('navigation.home')} />
             <NavItem to={Paths.examples.index} title={loc('navigation.examples')} icon='icon-education' text={loc('navigation.examples')} />
-            <NavItem to={Paths.iotDevices.index} title={loc('navigation.iotDevices')} icon='icon-play' text={loc('navigation.IotDevices')} />
+            <NavItem to={Paths.iotDevices.index} title={loc('navigation.iotDevices')} icon='icon-ferry' text={loc('navigation.IotDevices')} />
         </>
     );
 }
