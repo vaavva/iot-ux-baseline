@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as classnames from 'classnames/bind';
-import { TextField, RadioField, CheckboxField, ComboField, SelectField } from '@microsoft/azure-iot-ux-fluent-controls/lib/components/Field';
+import { TextField, RadioField, CheckboxField, ComboField, SelectField, NumberField } from '@microsoft/azure-iot-ux-fluent-controls/lib/components/Field';
 import { DateField } from '@microsoft/azure-iot-ux-fluent-controls/lib/components/DateTime';
 import { Component } from 'react';
 import { FormOption } from '@microsoft/azure-iot-ux-fluent-controls/lib/Common';
@@ -13,7 +13,14 @@ export default function IotDevices() {
     const [textValue, changeTextValue] = React.useState('');
     const [radioValue, changeRadioValue] = React.useState('');
     const [dateValue, changeDateValue] = React.useState('');
+    const [phoneValue, changePhoneValue] = React.useState(0);
+    const [isShown, changeShown] = React.useState(false);
 
+    function handleClick(event: MouseEvent) {
+        //when button shows 'hide twin'
+        changeShown(!isShown)
+      }
+    
     return (
         <div className={cx('container')}>
             <h1 className={cx('header')}>
@@ -26,10 +33,9 @@ export default function IotDevices() {
                     onChange={changeTextValue}
                     label='Name'
                     tooltip='Please Enter Your Name'
-                    required
                 />
                 <DateField
-                    name='dateTimeField'
+                    name='dateField'
                     initialValue={dateValue}
                     onChange={changeDateValue}
                     label='Birthdate'
@@ -40,11 +46,34 @@ export default function IotDevices() {
                     onChange={changeRadioValue}
                     label='Gender'
                     options={[
-                        { value: 'male', label: 'Male' },
-                        { value: 'female', label: 'Female' },
-                        { value: 'other', label: 'Other/Prefer Not To Say' },
+                        { value: 'Male', label: 'Male' },
+                        { value: 'Female', label: 'Female' },
+                        { value: 'Other/Prefer Not To Say', label: 'Other/Prefer Not To Say' },
                     ]}
                 />
+                <Button onClick={handleClick}>
+                    {isShown ? "Hide User Data" : "Submit User Data"}
+                </Button>
+                { isShown ? <div className={cx('card')}>
+                    <div className={cx('text')}>
+                        Name: {textValue}
+                        <br/>
+                        Birthdate: {new Date(dateValue).toDateString()}
+                        <br/>
+                        Gender: {radioValue}
+                    </div>
+                </div>: <div></div> }
+                <br/><br/>
+
+                
+
+                {/* <NumberField 
+                    name='phoneNumField'
+                    label='Phone Number'
+                    placeholder='Please enter your phone number'
+                    value={phoneValue}
+                    onChange={changePhoneValue}
+                /> */}
 
                 <h2>Device Twins</h2>
                 <br/>
@@ -57,6 +86,22 @@ export default function IotDevices() {
             </div>
         </div>
     )
+}
+
+function formatJson(json: string) {
+    // let newjson = json.replace(/{/g, "\n{");
+    // // return newjson;
+    // // return "";
+
+    // newjson.split('\n').map(function(item, key) {
+    //     return (
+    //       <span key={key}>
+    //         {item}
+    //         <br/>
+    //       </span>
+    //     )
+    //   });
+    return json;
 }
 
 function Select() {
@@ -92,6 +137,7 @@ function Select() {
                 changeSelectOptions(
                     newSelectOptions
                 );
+                changeSelectValue(newSelectOptions[0].label)
             })
             .catch(console.log)
             
@@ -134,20 +180,22 @@ function Select() {
             </Button>
             
             { isShown ?  
-                <div >
-                    <li>Authentication Type: {(deviceValue as unknown as DeviceInfo).authenticationType}</li>
-                    <li>Capabilities: {JSON.stringify((deviceValue as unknown as DeviceInfo).capabilities)}</li>
-                    <li>Cloud To Device Message Count: {(deviceValue as unknown as DeviceInfo).cloudToDeviceMessageCount}</li>
-                    <li>Connection State: {(deviceValue as unknown as DeviceInfo).connectionState}</li>
-                    <li>Device Etag: {(deviceValue as unknown as DeviceInfo).deviceEtag}</li>
-                    <li>Device ID: {(deviceValue as unknown as DeviceInfo).deviceId}</li>
-                    <li>Etag: {(deviceValue as unknown as DeviceInfo).etag}</li>
-                    <li>Last Activity Time: {(deviceValue as unknown as DeviceInfo).lastActivityTime}</li>
-                    <li>Properties: {JSON.stringify((deviceValue as unknown as DeviceInfo).properties)}</li>
-                    <li>Status: {(deviceValue as unknown as DeviceInfo).status}</li>
-                    <li>Status Update Time: {(deviceValue as unknown as DeviceInfo).statusUpdateTime}</li>
-                    <li>Tags: {JSON.stringify((deviceValue as unknown as DeviceInfo).tags)}</li>
-                    <li>Version: {(deviceValue as unknown as DeviceInfo).version}</li>
+                <div className={cx('card')}>
+                    <div className={cx('text')}>
+                        <b>Authentication Type: </b>{(deviceValue as unknown as DeviceInfo).authenticationType} <br/>
+                        <b>Capabilities: </b>{JSON.stringify((deviceValue as unknown as DeviceInfo).capabilities)} <br/>
+                        <b>Cloud To Device Message Count: </b>{(deviceValue as unknown as DeviceInfo).cloudToDeviceMessageCount} <br/>
+                        <b>Connection State: </b>{(deviceValue as unknown as DeviceInfo).connectionState} <br/>
+                        <b>Device Etag: </b>{(deviceValue as unknown as DeviceInfo).deviceEtag} <br/>
+                        <b>Device ID: </b>{(deviceValue as unknown as DeviceInfo).deviceId} <br/>
+                        <b>Etag: </b>{(deviceValue as unknown as DeviceInfo).etag} <br/>
+                        <b>Last Activity Time: </b>{(deviceValue as unknown as DeviceInfo).lastActivityTime} <br/>
+                        <b>Properties: </b>{formatJson(JSON.stringify((deviceValue as unknown as DeviceInfo).properties))} <br/>
+                        <b>Status: </b>{(deviceValue as unknown as DeviceInfo).status} <br/>
+                        <b>Status Update Time: </b>{(deviceValue as unknown as DeviceInfo).statusUpdateTime} <br/>
+                        <b>Tags: </b>{JSON.stringify((deviceValue as unknown as DeviceInfo).tags)} <br/>
+                        <b>Version: </b>{(deviceValue as unknown as DeviceInfo).version} <br/>
+                    </div>
                 </div>
             : <div></div>}
         </div>
@@ -159,22 +207,22 @@ function DeviceList(props: { devices: any; }) {
     const devices = props.devices;
     const listItems = devices.map((device: React.ReactNode[][]) =>        
         
-        <div>
-            <h3>{device[0]}</h3>
-            <div>
-                <li>Authentication Type: {(device[1] as unknown as DeviceInfo).authenticationType}</li>
-                <li>Capabilities: {JSON.stringify((device[1] as unknown as DeviceInfo).capabilities)}</li>
-                <li>Cloud To Device Message Count: {(device[1] as unknown as DeviceInfo).cloudToDeviceMessageCount}</li>
-                <li>Connection State: {(device[1] as unknown as DeviceInfo).connectionState}</li>
-                <li>Device Etag: {(device[1] as unknown as DeviceInfo).deviceEtag}</li>
-                <li>Device ID: {(device[1] as unknown as DeviceInfo).deviceId}</li>
-                <li>Etag: {(device[1] as unknown as DeviceInfo).etag}</li>
-                <li>Last Activity Time: {(device[1] as unknown as DeviceInfo).lastActivityTime}</li>
-                <li>Properties: {JSON.stringify((device[1] as unknown as DeviceInfo).properties)}</li>
-                <li>Status: {(device[1] as unknown as DeviceInfo).status}</li>
-                <li>Status Update Time: {(device[1] as unknown as DeviceInfo).statusUpdateTime}</li>
-                <li>Tags: {JSON.stringify((device[1] as unknown as DeviceInfo).tags)}</li>
-                <li>Version: {(device[1] as unknown as DeviceInfo).version}</li>
+        <div className={cx('card')}>
+            <div className={cx('text')}>
+                <h3>{device[0]}</h3>
+                <b>Authentication Type: </b>{(device[1] as unknown as DeviceInfo).authenticationType} <br/>
+                <b>Capabilities: </b>{JSON.stringify((device[1] as unknown as DeviceInfo).capabilities)} <br/>
+                <b>Cloud To Device Message Count: </b>{(device[1] as unknown as DeviceInfo).cloudToDeviceMessageCount} <br/>
+                <b>Connection State: </b>{(device[1] as unknown as DeviceInfo).connectionState} <br/>
+                <b>Device Etag: </b>{(device[1] as unknown as DeviceInfo).deviceEtag} <br/>
+                <b>Device ID: </b>{(device[1] as unknown as DeviceInfo).deviceId} <br/>
+                <b>Etag: </b>{(device[1] as unknown as DeviceInfo).etag} <br/>
+                <b>Last Activity Time: </b>{(device[1] as unknown as DeviceInfo).lastActivityTime} <br/>
+                <b>Properties: </b>{JSON.stringify((device[1] as unknown as DeviceInfo).properties)} <br/>
+                <b>Status: </b>{(device[1] as unknown as DeviceInfo).status} <br/>
+                <b>Status Update Time: </b>{(device[1] as unknown as DeviceInfo).statusUpdateTime} <br/>
+                <b>Tags: </b>{JSON.stringify((device[1] as unknown as DeviceInfo).tags)} <br/>
+                <b>Version: </b>{(device[1] as unknown as DeviceInfo).version} <br/>
             </div>
         </div>
     );
